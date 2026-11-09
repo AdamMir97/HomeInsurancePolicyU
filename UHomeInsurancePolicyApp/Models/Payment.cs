@@ -6,8 +6,13 @@
 
         public string PaymentReference { get; set; } = string.Empty;
 
-        public PolicyType PolicyType { get; set; }
+        public PaymentMethod PaymentType { get; set; }
 
         public decimal Amount { get; set; }
+
+        // Relate to Policy
+        public int PolicyId { get; set; }
+
+        public Policy Policy { get; set; } = null!;
     }
 }

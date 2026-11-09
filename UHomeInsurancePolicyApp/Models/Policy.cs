@@ -23,5 +23,8 @@ namespace UHomeInsurancePolicyApp.Models
         public List<Policyholder> Policyholders { get; set; } = [];
 
         public Property Property { get; set; } = new();
+
+        //link to payments
+        public ICollection<Payment> Payments { get; set; } = new List<Payment>();
     }
 }
