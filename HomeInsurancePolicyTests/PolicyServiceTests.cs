@@ -167,5 +167,27 @@ namespace HomeInsurancePolicyTests
             }
         }
 
+        // Policy holder must be above 16
+        [TestCase(17, true)]
+        [TestCase(16, true)]
+        [TestCase(15, false)]
+        public async Task SellPolicy_PolicyholderAge_ValidatedCorrectly(int age, bool shouldSucceed)
+        {
+            var policy = CreateValidPolicy();
+
+            policy.Policyholders.First().DateOfBirth =
+                policy.StartDate.AddYears(-age);
+
+            if (shouldSucceed)
+            {
+                await _service.SellPolicyAsync(policy);
+            }
+            else
+            {
+                await Assert.ThrowsAsync<InvalidOperationException>(
+                    async () => await _service.SellPolicyAsync(policy));
+            }
+        }
+
     }
 }
