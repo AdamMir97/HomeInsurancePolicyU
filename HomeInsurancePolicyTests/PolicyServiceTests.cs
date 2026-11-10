@@ -136,5 +136,36 @@ namespace HomeInsurancePolicyTests
                     async () => await _service.SellPolicyAsync(policy));
             }
         }
+
+        // Each policy can have upto 3 holders
+        [TestCase(0, false)]
+        [TestCase(1, true)]
+        [TestCase(2, true)]
+        [TestCase(3, true)]
+        [TestCase(4, false)]
+        public async Task SellPolicy_PolicyholderCount_ValidatedCorrectly(int count,bool shouldSucceed)
+        {
+            var policy = CreateValidPolicy();
+
+            policy.Policyholders = Enumerable.Range(0, count)
+                .Select(i => new Policyholder
+                {
+                    FirstName = $"Person{i}",
+                    LastName = "Smith",
+                    DateOfBirth = policy.StartDate.AddYears(-30)
+                })
+                .ToList();
+
+            if (shouldSucceed)
+            {
+                await _service.SellPolicyAsync(policy);
+            }
+            else
+            {
+                await Assert.ThrowsAsync<InvalidOperationException>(
+                    async () => await _service.SellPolicyAsync(policy));
+            }
+        }
+
     }
 }

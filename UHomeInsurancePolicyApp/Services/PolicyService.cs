@@ -41,6 +41,12 @@ namespace UHomeInsurancePolicyApp.Services
                 throw new InvalidOperationException(
                     "A policy must be exactly one year in length.");
             }
+            //only 3 policy holders allowed
+            if (policy.Policyholders.Count < 1 || policy.Policyholders.Count > 3)
+            {
+                throw new InvalidOperationException(
+                    "A policy must have between 1 and 3 policyholders.");
+            }
 
             _context.Policies.Add(policy);
                 
