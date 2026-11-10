@@ -76,5 +76,20 @@ namespace HomeInsurancePolicyTests
             Assert.That(savedPolicy!.PolicyReference,
                 Is.EqualTo(policy.PolicyReference));
         }
+
+        // Unique policy ref
+        [Test]
+        public async Task SellPolicy_DuplicateReference_ThrowsException()
+        {
+            // Arrange
+            var firstPolicy = CreateValidPolicy();
+            await _service.SellPolicyAsync(firstPolicy);
+
+            var secondPolicy = CreateValidPolicy();
+
+            // Act & Assert
+            await Assert.ThrowsAsync<InvalidOperationException>(
+                () => _service.SellPolicyAsync(secondPolicy));
+        }
     }
 }

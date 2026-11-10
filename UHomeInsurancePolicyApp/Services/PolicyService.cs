@@ -1,4 +1,5 @@
-﻿using UHomeInsurancePolicyApp.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using UHomeInsurancePolicyApp.Data;
 using UHomeInsurancePolicyApp.Models;
 
 namespace UHomeInsurancePolicyApp.Services
@@ -14,7 +15,18 @@ namespace UHomeInsurancePolicyApp.Services
 
         public async Task<Policy> SellPolicyAsync(Policy policy)
         {
-            _context.Policies.Add(policy);
+            var policyExists = await _context.Policies.AnyAsync(p => p.PolicyReference == policy.PolicyReference);
+
+            if (policyExists)
+            {
+                throw new InvalidOperationException(
+                    "A policy with this reference already exists.");
+            }
+            else
+            {
+                _context.Policies.Add(policy);
+                
+            }
 
             await _context.SaveChangesAsync();
 
