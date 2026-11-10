@@ -189,5 +189,36 @@ namespace HomeInsurancePolicyTests
             }
         }
 
+        // Testing payments
+        [Test]
+        public async Task SellPolicy_ValidPolicy_SavesPayment()
+        {
+            // Arrange
+            var policy = CreateValidPolicy();
+
+            var payment = new Payment
+            {
+                PaymentReference = "PAY123",
+                PaymentType = PaymentMethod.Card,
+                Amount = policy.Amount
+            };
+
+            policy.Payments.Add(payment);
+
+            // Act
+            await _service.SellPolicyAsync(policy);
+
+            // Assert
+            var savedPayment = await _context.Payments
+                .FirstOrDefaultAsync(p =>
+                    p.PaymentReference == "PAY123");
+
+            Assert.That(savedPayment, Is.Not.Null);
+            Assert.That(savedPayment!.PaymentType,
+                Is.EqualTo(PaymentMethod.Card));
+            Assert.That(savedPayment.Amount,
+                Is.EqualTo(policy.Amount));
+        }
+
     }
 }
