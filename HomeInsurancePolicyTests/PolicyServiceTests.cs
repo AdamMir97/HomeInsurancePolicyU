@@ -220,5 +220,39 @@ namespace HomeInsurancePolicyTests
                 Is.EqualTo(policy.Amount));
         }
 
+        //Retrieve policy
+        [Test]
+        public async Task GetPolicy_ExistingReference_ReturnsPolicy()
+        {
+            // Arrange
+            var policy = CreateValidPolicy();
+
+            await _service.SellPolicyAsync(policy);
+
+            // Act
+            var result = await _service.GetPolicyAsync(
+                policy.PolicyReference);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.PolicyReference,
+                Is.EqualTo(policy.PolicyReference));
+            Assert.That(result.PolicyType,
+                Is.EqualTo(policy.PolicyType));
+            Assert.That(result.Amount,
+                Is.EqualTo(policy.Amount));
+        }
+
+        //Can't retrive policy that doesn't exist
+        [Test]
+        public async Task GetPolicy_UnknownReference_ReturnsNull()
+        {
+            // Act
+            var result = await _service.GetPolicyAsync("UNKNOWN");
+
+            // Assert
+            Assert.That(result, Is.Null);
+        }
+
     }
 }

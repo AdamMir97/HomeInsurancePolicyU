@@ -13,6 +13,15 @@ namespace UHomeInsurancePolicyApp.Services
             _context = context;
         }
 
+        public async Task<Policy?> GetPolicyAsync(string reference)
+        {
+            return await _context.Policies
+                .Include(p => p.Policyholders)
+                .Include(p => p.Property)
+                .Include(p => p.Payments)
+                .FirstOrDefaultAsync(p => p.PolicyReference == reference);
+        }
+
         public async Task<Policy> SellPolicyAsync(Policy policy)
         {
             var policyExists = await _context.Policies.AnyAsync(p => p.PolicyReference == policy.PolicyReference);
