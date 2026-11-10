@@ -35,6 +35,12 @@ namespace UHomeInsurancePolicyApp.Services
                 throw new InvalidOperationException(
                     "A policy cannot start in the past.");
             }
+            //policy lasts for a year
+            if (policy.EndDate != policy.StartDate.AddYears(1))
+            {
+                throw new InvalidOperationException(
+                    "A policy must be exactly one year in length.");
+            }
 
             _context.Policies.Add(policy);
                 

@@ -92,6 +92,7 @@ namespace HomeInsurancePolicyTests
                 () => _service.SellPolicyAsync(secondPolicy));
         }
 
+        // Policy must start within 60 days
         [TestCase(0, true)]
         [TestCase(30, true)]
         [TestCase(60, true)]
@@ -113,6 +114,26 @@ namespace HomeInsurancePolicyTests
             {
                 await Assert.ThrowsAsync<InvalidOperationException>(
                     () => _service.SellPolicyAsync(policy));
+            }
+        }
+
+        // Policy must be a year long
+        [TestCase(12, true)]
+        [TestCase(6, false)]
+        [TestCase(18, false)]
+        public async Task SellPolicy_Duration_ValidatedCorrectly(int months,bool shouldSucceed)
+        {
+            var policy = CreateValidPolicy();
+            policy.EndDate = policy.StartDate.AddMonths(months);
+
+            if (shouldSucceed)
+            {
+                await _service.SellPolicyAsync(policy);
+            }
+            else
+            {
+                await Assert.ThrowsAsync<InvalidOperationException>(
+                    async () => await _service.SellPolicyAsync(policy));
             }
         }
     }
