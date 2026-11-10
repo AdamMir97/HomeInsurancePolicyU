@@ -1,6 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using UHomeInsurancePolicyApp.Data;
+using UHomeInsurancePolicyApp.Services;
 
 namespace UHomeInsurancePolicyApp
 {
@@ -16,6 +17,7 @@ namespace UHomeInsurancePolicyApp
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddDbContext<PolicyDbContext>(options =>
                         options.UseInMemoryDatabase("PolicyDatabase"));
+            builder.Services.AddScoped<PolicyService>();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
