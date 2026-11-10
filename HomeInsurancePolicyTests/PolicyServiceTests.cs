@@ -91,5 +91,29 @@ namespace HomeInsurancePolicyTests
             await Assert.ThrowsAsync<InvalidOperationException>(
                 () => _service.SellPolicyAsync(secondPolicy));
         }
+
+        [TestCase(0, true)]
+        [TestCase(30, true)]
+        [TestCase(60, true)]
+        [TestCase(61, false)]
+        public async Task SellPolicy_StartDate_ValidatedCorrectly(int daysAhead,bool shouldSucceed)
+        {
+            //Arrange
+            var policy = CreateValidPolicy();
+
+            policy.StartDate = DateTime.Today.AddDays(daysAhead);
+            policy.EndDate = policy.StartDate.AddYears(1);
+
+            //Act & Assert
+            if (shouldSucceed)
+            {
+                await _service.SellPolicyAsync(policy);
+            }
+            else
+            {
+                await Assert.ThrowsAsync<InvalidOperationException>(
+                    () => _service.SellPolicyAsync(policy));
+            }
+        }
     }
 }
